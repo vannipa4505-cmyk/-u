@@ -1,0 +1,763 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
+  <title>MyWeb Studio | ระบบสมาชิก</title>
+
+  <style>
+    :root {
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #0284c7;
+      --border: #cbd5e1;
+    }
+
+    body.dark {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --border: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: background .2s, color .2s;
+    }
+
+    header {
+      background: #0f172a;
+      color: white;
+      padding: 16px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 21px;
+    }
+
+    main {
+      width: min(100% - 28px, 500px);
+      margin: 30px auto;
+    }
+
+    .panel {
+      background: var(--card);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px #00000010;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-top: 0;
+    }
+
+    p {
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 15px 0 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: var(--card);
+      color: var(--text);
+      font: inherit;
+      font-size: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      background: var(--accent);
+      color: white;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    .primary {
+      width: 100%;
+      margin-top: 16px;
+    }
+
+    .secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    body.dark .secondary {
+      background: #334155;
+      color: white;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin: 20px 0;
+    }
+
+    .tabs button {
+      flex: 1;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .profile {
+      background: var(--bg);
+      padding: 16px;
+      border-radius: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    #status {
+      margin-top: 18px;
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h2>MyWeb Studio</h2>
+    <button id="themeBtn" type="button"
+            class="secondary">
+      🌙 เปลี่ยนธีม
+    </button>
+  </header>
+
+  <main>
+    <!-- หน้าเข้าสู่ระบบและสมัครสมาชิก -->
+    <section id="authPanel" class="panel">
+      <h1>ยินดีต้อนรับ</h1>
+      <p>เข้าสู่ระบบหรือสมัครสมาชิกเพื่อใช้งานเว็บไซต์</p>
+
+      <div class="tabs">
+        <button id="loginTab" type="button">
+          เข้าสู่ระบบ
+        </button>
+        <button id="signupTab" type="button"
+                class="secondary">
+          สมัครสมาชิก
+        </button>
+      </div>
+
+      <form id="authForm">
+        <label for="email">อีเมล</label>
+        <input id="email" type="email"
+               autocomplete="email"
+               maxlength="254" required
+               placeholder="you@example.com">
+
+        <label for="password">รหัสผ่าน</label>
+        <input id="password" type="password"
+               autocomplete="current-password"
+               minlength="8" maxlength="72"
+               required placeholder="อย่างน้อย 8 ตัวอักษร">
+
+        <button id="submitBtn" type="submit"
+                class="primary">
+          เข้าสู่ระบบ
+        </button>
+      </form>
+
+      <button id="resetBtn" type="button"
+              class="secondary primary">
+        ลืมรหัสผ่าน?
+      </button>
+
+      <p class="muted">
+        หากเปิดการยืนยันอีเมลไว้ กรุณาตรวจสอบกล่องจดหมาย
+        หลังสมัครสมาชิก
+      </p>
+    </section>
+
+    <!-- หน้าโปรไฟล์ -->
+    <section id="profilePanel" class="panel hidden">
+      <h1>บัญชีของฉัน</h1>
+      <p>คุณเข้าสู่ระบบแล้ว</p>
+
+      <div class="profile">
+        <strong>อีเมลสมาชิก</strong>
+        <p id="userEmail"></p>
+
+        <strong>รหัสผู้ใช้</strong>
+        <p id="userId"></p>
+
+        <label for="displayName">
+          ชื่อที่แสดงบนเว็บไซต์
+        </label>
+        <input id="displayName" type="text"
+               maxlength="60"
+               placeholder="กรอกชื่อของคุณ">
+
+        <button id="saveProfileBtn" type="button"
+                class="primary">
+          บันทึกโปรไฟล์
+        </button>
+      </div>
+
+      <button id="logoutBtn" type="button"
+              class="primary">
+        ออกจากระบบ
+      </button>
+    </section>
+
+    <!-- หน้าตั้งรหัสผ่านใหม่ -->
+    <section id="recoveryPanel"
+             class="panel hidden">
+      <h1>ตั้งรหัสผ่านใหม่</h1>
+      <p>กรอกรหัสผ่านใหม่เพื่อเปลี่ยนรหัสผ่านบัญชีของคุณ</p>
+
+      <form id="recoveryForm">
+        <label for="newPassword">รหัสผ่านใหม่</label>
+        <input id="newPassword" type="password"
+               autocomplete="new-password"
+               minlength="8" maxlength="72"
+               required>
+
+        <label for="confirmPassword">
+          ยืนยันรหัสผ่านใหม่
+        </label>
+        <input id="confirmPassword" type="password"
+               autocomplete="new-password"
+               minlength="8" maxlength="72"
+               required>
+
+        <button id="recoveryBtn" type="submit"
+                class="primary">
+          บันทึกรหัสผ่านใหม่
+        </button>
+      </form>
+    </section>
+
+    <p id="status" role="status"
+       aria-live="polite"></p>
+  </main>
+
+  <footer>© 2026 MyWeb Studio</footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // ======================================
+    // 1. ตั้งค่า Supabase ของคุณตรงนี้
+    // ======================================
+
+    const SUPABASE_URL = "ใส่_PROJECT_URL";
+    const SUPABASE_KEY = "ใส่_PUBLISHABLE_KEY";
+
+    // ======================================
+    // 2. ตัวแปรหลัก
+    // ======================================
+
+    const $ = (selector) =>
+      document.querySelector(selector);
+
+    let supabaseClient = null;
+    let mode = "login";
+    let busy = false;
+    let recoveryMode = false;
+
+    // ======================================
+    // 3. ข้อความและหน้าจอ
+    // ======================================
+
+    function showStatus(message, isError = false) {
+      $("#status").textContent = message;
+      $("#status").style.color =
+        isError ? "#dc2626" : "#16a34a";
+    }
+
+    function showPanel(panelName) {
+      $("#authPanel").classList.toggle(
+        "hidden", panelName !== "auth"
+      );
+
+      $("#profilePanel").classList.toggle(
+        "hidden", panelName !== "profile"
+      );
+
+      $("#recoveryPanel").classList.toggle(
+        "hidden", panelName !== "recovery"
+      );
+    }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+
+      $("#loginTab").className =
+        mode === "login" ? "" : "secondary";
+
+      $("#signupTab").className =
+        mode === "signup" ? "" : "secondary";
+
+      $("#submitBtn").textContent =
+        mode === "signup"
+          ? "สมัครสมาชิก"
+          : "เข้าสู่ระบบ";
+
+      $("#password").autocomplete =
+        mode === "signup"
+          ? "new-password"
+          : "current-password";
+
+      showStatus("");
+    }
+
+    function renderUser(user) {
+      if (recoveryMode) {
+        showPanel("recovery");
+        return;
+      }
+
+      if (!user) {
+        showPanel("auth");
+        return;
+      }
+
+      showPanel("profile");
+      $("#userEmail").textContent =
+        user.email || "ไม่มีอีเมล";
+      $("#userId").textContent = user.id;
+    }
+
+    // ======================================
+    // 4. สมัครสมาชิกและเข้าสู่ระบบ
+    // ======================================
+
+    $("#loginTab").addEventListener(
+      "click", () => setMode("login")
+    );
+
+    $("#signupTab").addEventListener(
+      "click", () => setMode("signup")
+    );
+
+    $("#authForm").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+
+        if (!supabaseClient || busy) return;
+
+        const email = $("#email").value.trim();
+        const password = $("#password").value;
+
+        busy = true;
+        $("#submitBtn").disabled = true;
+        showStatus("กำลังดำเนินการ...");
+
+        try {
+          if (mode === "signup") {
+            const { data, error } =
+              await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                  emailRedirectTo:
+                    window.location.origin +
+                    window.location.pathname
+                }
+              });
+
+            if (error) throw error;
+
+            if (data.session) {
+              renderUser(data.session.user);
+              showStatus("สมัครสมาชิกสำเร็จ");
+            } else {
+              showStatus(
+                "สมัครแล้ว กรุณาตรวจสอบอีเมลเพื่อยืนยันบัญชี"
+              );
+            }
+          } else {
+            const { data, error } =
+              await supabaseClient.auth
+                .signInWithPassword({
+                  email,
+                  password
+                });
+
+            if (error) throw error;
+
+            recoveryMode = false;
+            renderUser(data.user);
+            showStatus("เข้าสู่ระบบสำเร็จ");
+          }
+        } catch (error) {
+          showStatus(
+            "ดำเนินการไม่สำเร็จ: " + error.message,
+            true
+          );
+        } finally {
+          busy = false;
+          $("#submitBtn").disabled = false;
+        }
+      }
+    );
+
+    // ======================================
+    // 5. ขอรีเซ็ตรหัสผ่านทางอีเมล
+    // ======================================
+
+    $("#resetBtn").addEventListener(
+      "click", async () => {
+        if (!supabaseClient) return;
+
+        const email = $("#email").value.trim();
+
+        if (!email) {
+          showStatus(
+            "กรุณากรอกอีเมลก่อนขอรีเซ็ตรหัสผ่าน",
+            true
+          );
+          $("#email").focus();
+          return;
+        }
+
+        try {
+          const { error } =
+            await supabaseClient.auth
+              .resetPasswordForEmail(email, {
+                redirectTo:
+                  window.location.origin +
+                  window.location.pathname
+              });
+
+          if (error) throw error;
+
+          showStatus(
+            "หากอีเมลนี้ลงทะเบียนไว้ ระบบจะส่งคำแนะนำให้ตรวจสอบอีเมล"
+          );
+        } catch (error) {
+          showStatus(
+            "ส่งคำขอไม่สำเร็จ: " + error.message,
+            true
+          );
+        }
+      }
+    );
+
+    // ======================================
+    // 6. รับลิงก์รีเซ็ตรหัสผ่าน
+    // ======================================
+
+    function openRecoveryForm() {
+      recoveryMode = true;
+      showPanel("recovery");
+      showStatus("กรุณากรอกรหัสผ่านใหม่");
+    }
+
+    $("#recoveryForm").addEventListener(
+      "submit", async (event) => {
+        event.preventDefault();
+
+        if (!supabaseClient || busy) return;
+
+        const password = $("#newPassword").value;
+        const confirm = $("#confirmPassword").value;
+
+        if (password !== confirm) {
+          showStatus(
+            "รหัสผ่านทั้งสองช่องไม่ตรงกัน",
+            true
+          );
+          return;
+        }
+
+        busy = true;
+        $("#recoveryBtn").disabled = true;
+
+        try {
+          const { error } =
+            await supabaseClient.auth.updateUser({
+              password
+            });
+
+          if (error) throw error;
+
+          recoveryMode = false;
+
+          $("#recoveryForm").reset();
+
+          await supabaseClient.auth.signOut();
+          renderUser(null);
+
+          showStatus(
+            "เปลี่ยนรหัสผ่านสำเร็จ กรุณาเข้าสู่ระบบอีกครั้ง"
+          );
+        } catch (error) {
+          showStatus(
+            "เปลี่ยนรหัสผ่านไม่สำเร็จ: " +
+              error.message,
+            true
+          );
+        } finally {
+          busy = false;
+          $("#recoveryBtn").disabled = false;
+        }
+      }
+    );
+
+    // ======================================
+    // 7. โหลดโปรไฟล์ของสมาชิก
+    // ======================================
+
+    async function loadProfile(user) {
+      if (!supabaseClient || !user) return;
+
+      const { data, error } = await supabaseClient
+        .from("profiles")
+        .select("display_name")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) {
+        showStatus(
+          "อ่านโปรไฟล์ไม่สำเร็จ: " + error.message,
+          true
+        );
+        return;
+      }
+
+      $("#displayName").value =
+        data?.display_name ?? "";
+    }
+
+    // ======================================
+    // 8. บันทึกโปรไฟล์
+    // ======================================
+
+    $("#saveProfileBtn").addEventListener(
+      "click", async () => {
+        if (!supabaseClient || busy) return;
+
+        const displayName =
+          $("#displayName").value.trim();
+
+        if (
+          displayName.length < 1 ||
+          displayName.length > 60
+        ) {
+          showStatus(
+            "กรุณากรอกชื่อ 1–60 ตัวอักษร",
+            true
+          );
+          return;
+        }
+
+        busy = true;
+        $("#saveProfileBtn").disabled = true;
+
+        try {
+          const { data: userData, error: userError } =
+            await supabaseClient.auth.getUser();
+
+          if (userError) throw userError;
+
+          const user = userData.user;
+
+          if (!user) {
+            throw new Error("กรุณาเข้าสู่ระบบใหม่");
+          }
+
+          const { error } = await supabaseClient
+            .from("profiles")
+            .upsert({
+              user_id: user.id,
+              display_name: displayName,
+              updated_at: new Date().toISOString()
+            }, {
+              onConflict: "user_id"
+            });
+
+          if (error) throw error;
+
+          showStatus("บันทึกโปรไฟล์สำเร็จ");
+        } catch (error) {
+          showStatus(
+            "บันทึกไม่สำเร็จ: " + error.message,
+            true
+          );
+        } finally {
+          busy = false;
+          $("#saveProfileBtn").disabled = false;
+        }
+      }
+    );
+
+    // ======================================
+    // 9. ออกจากระบบ
+    // ======================================
+
+    $("#logoutBtn").addEventListener(
+      "click", async () => {
+        if (!supabaseClient) return;
+
+        try {
+          const { error } =
+            await supabaseClient.auth.signOut();
+
+          if (error) throw error;
+
+          recoveryMode = false;
+          renderUser(null);
+          showStatus("ออกจากระบบแล้ว");
+        } catch (error) {
+          showStatus(
+            "ออกจากระบบไม่สำเร็จ: " + error.message,
+            true
+          );
+        }
+      }
+    );
+
+    // ======================================
+    // 10. เปลี่ยนธีม
+    // ======================================
+
+    $("#themeBtn").addEventListener(
+      "click", () => {
+        document.body.classList.toggle("dark");
+
+        $("#themeBtn").textContent =
+          document.body.classList.contains("dark")
+            ? "☀️ ธีมสว่าง"
+            : "🌙 เปลี่ยนธีม";
+      }
+    );
+
+    // ======================================
+    // 11. เริ่มต้นระบบ Supabase
+    // ======================================
+
+    async function init() {
+      if (!window.supabase) {
+        showStatus(
+          "โหลด Supabase ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต",
+          true
+        );
+        return;
+      }
+
+      if (
+        SUPABASE_URL.includes("ใส่_") ||
+        SUPABASE_KEY.includes("ใส่_")
+      ) {
+        showStatus(
+          "กรุณาใส่ Project URL และ Publishable key",
+          true
+        );
+        return;
+      }
+
+      try {
+        supabaseClient =
+          window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+          );
+
+        const { data, error } =
+          await supabaseClient.auth.getSession();
+
+        if (error) throw error;
+
+        const hash = new URLSearchParams(
+          window.location.hash.slice(1)
+        );
+
+        const query = new URLSearchParams(
+          window.location.search
+        );
+
+        const isRecovery =
+          hash.get("type") === "recovery" ||
+          query.get("type") === "recovery";
+
+        if (isRecovery) {
+          openRecoveryForm();
+        } else {
+          renderUser(data.session?.user ?? null);
+        }
+
+        supabaseClient.auth.onAuthStateChange(
+          (event, session) => {
+            if (event === "PASSWORD_RECOVERY") {
+              openRecoveryForm();
+              return;
+            }
+
+            if (!recoveryMode) {
+              renderUser(session?.user ?? null);
+
+              if (session?.user) {
+                loadProfile(session.user);
+              }
+            }
+          }
+        );
+
+        if (data.session?.user && !recoveryMode) {
+          await loadProfile(data.session.user);
+        }
+      } catch (error) {
+        showStatus(
+          "เริ่มระบบไม่สำเร็จ: " + error.message,
+          true
+        );
+      }
+    }
+
+    init();
+  </script>
+</body>
+  </html>
+        
